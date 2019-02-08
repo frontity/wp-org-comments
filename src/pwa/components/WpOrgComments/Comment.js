@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import ReplyIcon from './ReplyIcon';
 
 const Comment = ({ id, name, avatar, date, content, onReply }) => (
   <Container>
@@ -13,11 +12,9 @@ const Comment = ({ id, name, avatar, date, content, onReply }) => (
         <Name>{name}</Name>
         <Fecha>{date.toLocaleString()}</Fecha>
       </Text>
+      <ReplyButton onClick={() => onReply(id)}>Reply</ReplyButton>
     </Header>
     <Content dangerouslySetInnerHTML={{ __html: content }} />
-    <ReplyButton onClick={() => onReply(id)}>
-      <ReplyIcon /> Reply
-    </ReplyButton>
   </Container>
 );
 
@@ -26,18 +23,22 @@ const Container = styled.div`
 `;
 const Header = styled.div`
   display: flex;
+  align-items: center;
 `;
 const Avatar = styled.div`
   margin-right: 16px;
   width: 48px;
   height: 48px;
+  flex: 0 0 auto;
 
   img {
     width: 100%;
     height: 100%;
   }
 `;
-const Text = styled.div``;
+const Text = styled.div`
+  flex: 1 1 auto;
+`;
 const Name = styled.div`
   font-weight: bold;
 `;
@@ -46,20 +47,16 @@ const Content = styled.div``;
 
 const ReplyButton = styled.button`
   margin-top: 16px;
-  color: ${({ theme }) => theme.colors.link};
-  background: transparent;
+  color: ${({ theme }) => theme.colors.text};
+  background: ${({ theme }) => theme.colors.background};
   margin: 0;
   padding: 4px 8px;
   border: none;
   font-weight: bold;
   display: flex;
   align-items: center;
+  flex: 0 0 auto;
   cursor: pointer;
-
-  svg {
-    width: 16px;
-    margin-right: 8px;
-  }
 `;
 
 Comment.propTypes = {
