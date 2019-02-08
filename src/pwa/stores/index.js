@@ -38,7 +38,7 @@ export default types
   .actions(self => ({
     create: flow(function* create({ id, name, email, url, content }) {
       const { request } = getEnv(self.root);
-      yield request.post('/wp-json/wp/v2/comments').send({
+      yield request.post('/wp-comments-post.php').send({
         author_name: name,
         author_email: email,
         author_url: url,
