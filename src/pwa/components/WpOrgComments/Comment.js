@@ -46,17 +46,16 @@ const Fecha = styled.div``;
 const Content = styled.div``;
 
 const ReplyButton = styled.button`
-  margin-top: 16px;
   color: ${({ theme }) => theme.colors.text};
   background: ${({ theme }) => theme.colors.background};
   margin: 0;
   padding: 4px 8px;
   border: none;
-  font-weight: bold;
   display: flex;
   align-items: center;
   flex: 0 0 auto;
   cursor: pointer;
+  box-shadow: 1px 1px 1px 0 ${({ theme }) => theme.colors.shadow};
 `;
 
 Comment.propTypes = {

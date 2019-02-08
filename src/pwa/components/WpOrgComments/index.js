@@ -38,10 +38,10 @@ class WpOrgComments extends Component {
         <hr />
         <Form ref={this.formRef} action="/wp-comments-post.php" method="post">
           <FormTitle>
-            Leave a reply{' '}
+            <h3>Leave a reply </h3>
             {parentId ? (
               <CancelReply onClick={() => this.setParentId(0)}>
-                cancel reply
+                Cancel reply
               </CancelReply>
             ) : null}
           </FormTitle>
@@ -132,13 +132,26 @@ const Container = styled.div`
 
 const Form = styled.form``;
 
-const FormTitle = styled.h3`
-  font-weight: bold;
+const FormTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  h3 {
+    font-weight: bold;
+  }
 `;
 
-const CancelReply = styled.span`
-  color: ${({ theme }) => theme.colors.link};
-  font-size: 16px;
+const CancelReply = styled.button`
+  color: ${({ theme }) => theme.colors.text};
+  background: ${({ theme }) => theme.colors.background};
+  margin: 0;
+  padding: 4px 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px 0 ${({ theme }) => theme.colors.shadow};
 `;
 
 const Label = styled.label`
