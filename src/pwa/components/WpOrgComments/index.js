@@ -8,33 +8,43 @@ class WpOrgComments extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      comment: '',
+      author: '',
+      email: '',
+      url: '',
+      parentId: 0,
+    };
+
     this.onChange = this.onChange.bind(this);
     this.formRef = createRef();
-    // this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onChange(event) {
-    const { name, value } = event.target;
+  setParentId = parentId => this.setState({ parentId });
+
+  onChange = ({ target }) => {
+    const { name, value } = target;
     this.setState({ [name]: value });
-  }
-
-  onSubmit(e) {
-    e.preventDefault();
-    const { id, create } = this.props;
-    create({ id, ...this.state });
-  }
+  };
 
   render() {
-    const { comments, id, parentId } = this.props;
-    const { comment, author, email, url } = this.state;
+    const { comments, id } = this.props;
+    const { comment, author, email, url, parentId } = this.state;
     return (
       <Container>
         {comments.map(props => (
-          <Comment key={props.id} {...props} />
+          <Comment key={props.id} {...props} onReply={this.setParentId} />
         ))}
+        <hr />
         <Form ref={this.formRef} action="/wp-comments-post.php" method="post">
-          <h3>Leave a reply</h3>
+          <FormTitle>
+            Leave a reply{' '}
+            {parentId ? (
+              <CancelReply onClick={() => this.setParentId(0)}>
+                cancel reply
+              </CancelReply>
+            ) : null}
+          </FormTitle>
           <Label htmlFor="comment">
             <span>Comment</span>
             <TextArea
@@ -44,7 +54,7 @@ class WpOrgComments extends Component {
               rows="8"
               maxLength="65525"
               required="required"
-              value={comment || ''}
+              value={comment}
               onChange={this.onChange}
             />
           </Label>
@@ -54,7 +64,7 @@ class WpOrgComments extends Component {
               id="author"
               name="author"
               type="text"
-              value={author || ''}
+              value={author}
               onChange={this.onChange}
               size="30"
               maxLength="245"
@@ -67,7 +77,7 @@ class WpOrgComments extends Component {
               id="email"
               name="email"
               type="email"
-              value={email || ''}
+              value={email}
               onChange={this.onChange}
               size="30"
               maxLength="100"
@@ -81,7 +91,7 @@ class WpOrgComments extends Component {
               id="url"
               name="url"
               type="url"
-              value={url || ''}
+              value={url}
               onChange={this.onChange}
               size="30"
               maxLength="200"
@@ -112,11 +122,8 @@ class WpOrgComments extends Component {
 
 WpOrgComments.propTypes = {
   comments: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  create: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  parentId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired,
 };
 
 const Container = styled.div`
@@ -124,6 +131,16 @@ const Container = styled.div`
 `;
 
 const Form = styled.form``;
+
+const FormTitle = styled.h3`
+  font-weight: bold;
+`;
+
+const CancelReply = styled.span`
+  color: ${({ theme }) => theme.colors.link};
+  font-size: 16px;
+`;
+
 const Label = styled.label`
   margin-top: 16px;
   display: flex;
@@ -165,6 +182,4 @@ const Button = styled.input`
 
 export default inject(({ stores: { comments } }, { type, id }) => ({
   comments: comments.getFromEntity({ type, id }),
-  create: comments.create,
-  parentId: 0,
 }))(WpOrgComments);

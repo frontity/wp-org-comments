@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import ReplyIcon from './ReplyIcon';
 
-const Comment = ({ name, avatar, date, content }) => (
+const Comment = ({ id, name, avatar, date, content, onReply }) => (
   <Container>
     <Header>
       <Avatar>
@@ -14,11 +15,14 @@ const Comment = ({ name, avatar, date, content }) => (
       </Text>
     </Header>
     <Content dangerouslySetInnerHTML={{ __html: content }} />
+    <ReplyButton onClick={() => onReply(id)}>
+      <ReplyIcon /> Reply
+    </ReplyButton>
   </Container>
 );
 
 const Container = styled.div`
-  margin-top: 32px;
+  margin-bottom: 32px;
 `;
 const Header = styled.div`
   display: flex;
@@ -40,11 +44,31 @@ const Name = styled.div`
 const Fecha = styled.div``;
 const Content = styled.div``;
 
+const ReplyButton = styled.button`
+  margin-top: 16px;
+  color: ${({ theme }) => theme.colors.link};
+  background: transparent;
+  margin: 0;
+  padding: 4px 8px;
+  border: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  svg {
+    width: 16px;
+    margin-right: 8px;
+  }
+`;
+
 Comment.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   name: PropTypes.string.isRequired,
   avatar: PropTypes.string.isRequired,
   date: PropTypes.instanceOf(Date).isRequired,
   content: PropTypes.string.isRequired,
+  onReply: PropTypes.func.isRequired,
 };
 
 export default Comment;
