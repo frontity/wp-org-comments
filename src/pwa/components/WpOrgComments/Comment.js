@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const Comment = ({ id, name, avatar, date, content, onReply }) => (
+const Comment = ({ id, name, avatar, date, content, replies, onReply }) => (
   <Container>
     <Header>
       <Avatar>
@@ -15,6 +15,13 @@ const Comment = ({ id, name, avatar, date, content, onReply }) => (
       <ReplyButton onClick={() => onReply(id)}>Reply</ReplyButton>
     </Header>
     <Content dangerouslySetInnerHTML={{ __html: content }} />
+    {replies && replies.length ? (
+      <Replies>
+        {replies.map(props => (
+          <Comment key={props.id} {...props} />
+        ))}
+      </Replies>
+    ) : null}
   </Container>
 );
 
@@ -58,6 +65,11 @@ const ReplyButton = styled.button`
   box-shadow: 1px 1px 1px 0 ${({ theme }) => theme.colors.shadow};
 `;
 
+const Replies = styled.div`
+  border-left: 2px solid ${({ theme }) => theme.colors.link};
+  padding-left: 8px;
+`;
+
 Comment.propTypes = {
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   name: PropTypes.string.isRequired,
@@ -65,6 +77,11 @@ Comment.propTypes = {
   date: PropTypes.instanceOf(Date).isRequired,
   content: PropTypes.string.isRequired,
   onReply: PropTypes.func.isRequired,
+  replies: PropTypes.arrayOf(Comment.propTypes),
+};
+
+Comment.defaultProps = {
+  replies: [],
 };
 
 export default Comment;

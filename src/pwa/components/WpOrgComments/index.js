@@ -193,6 +193,6 @@ const Button = styled.input`
   box-shadow: 1px 1px 1px 0 ${({ theme }) => theme.colors.shadow};
 `;
 
-export default inject(({ stores: { comments } }, { type, id }) => ({
-  comments: comments.getFromEntity({ type, id }),
+export default inject(({ stores: { comments } }, { id }) => ({
+  comments: comments.getFromPost(id),
 }))(WpOrgComments);
