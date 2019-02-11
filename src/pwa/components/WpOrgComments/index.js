@@ -27,6 +27,20 @@ class WpOrgComments extends Component {
     this.setState({ [name]: value });
   };
 
+  onSubmit = event => {
+    event.preventDefault();
+    const { submit, type, id } = this.props;
+    const { elements } = this.formRef.current;
+    const data = {};
+
+    Array.from(elements).reduce((d, e) => {
+      d[e.name] = e.value;
+      return d;
+    }, data);
+
+    submit({ type, id, data });
+  };
+
   render() {
     const { comments, id } = this.props;
     const { comment, author, email, url, parentId } = this.state;
@@ -34,7 +48,7 @@ class WpOrgComments extends Component {
       <Container>
         <CommentsList comments={comments} onReply={this.setParentId} />
         <hr />
-        <Form ref={this.formRef} action="/wp-comments-post.php" method="post">
+        <Form ref={this.formRef} onSubmit={this.onSubmit}>
           <FormTitle>
             <h3>Leave a reply </h3>
             {parentId ? (
@@ -107,11 +121,7 @@ class WpOrgComments extends Component {
             id="comment_parent"
             value={parentId}
           />
-          <Button
-            type="reset"
-            value="Post Comment"
-            onClick={() => this.formRef.current.submit()}
-          />
+          <Button type="submit" value="Post Comment" />
         </Form>
       </Container>
     );
@@ -120,12 +130,18 @@ class WpOrgComments extends Component {
 
 WpOrgComments.propTypes = {
   comments: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  // type: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  submit: PropTypes.func.isRequired,
 };
 
+export default inject(({ stores: { comments } }, { type, id }) => ({
+  comments: comments.fromPost({ type, id }),
+  submit: comments.submit,
+}))(WpOrgComments);
+
 const Container = styled.div`
-  padding: 16px;
+  padding: 32px 16px;
 `;
 
 const Form = styled.form``;
@@ -190,7 +206,3 @@ const Button = styled.input`
   line-height: 24px;
   box-shadow: 1px 1px 1px 0 ${({ theme }) => theme.colors.shadow};
 `;
-
-export default inject(({ stores: { comments } }, { type, id }) => ({
-  comments: comments.fromPost({ type, id }),
-}))(WpOrgComments);
