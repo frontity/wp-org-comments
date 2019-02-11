@@ -73,4 +73,13 @@ export default types
       );
       self.addComments(String(id), comments);
     }),
+    submit: flow(function* submit({ type, id, data }) {
+      const { request } = getEnv(self.root);
+      yield request
+        .post(`/wp-comments-post.php`)
+        .type('form')
+        .send(data);
+
+      self.update({ type, id });
+    }),
   }));
