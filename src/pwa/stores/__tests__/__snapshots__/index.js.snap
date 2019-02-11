@@ -1,0 +1,173 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`wp-org-comments › Comments fromPost returns an empty array for posts without comments 1`] = `Array []`;
+
+exports[`wp-org-comments › Comments fromPost returns comments from entity.raw 1`] = `
+Array [
+  Object {
+    "avatar": "https://secure.gravatar.com/avatar/485a5c16c5e51ffad6e76c48fd0cb88b?s=96&d=mm&r=g",
+    "content": "<p>Nice post, Alan! Iceland must be amazing. Thanks for sharing 🙂</p>
+",
+    "date": 1484320243000,
+    "id": "5",
+    "name": "Reyes Martinez",
+    "parent": "0",
+  },
+  Object {
+    "avatar": "https://secure.gravatar.com/avatar/a850f5724ad7ea03941081972841a04a?s=96&d=mm&r=g",
+    "content": "<p>Hi, Reyes</p>
+",
+    "date": 1549470939000,
+    "id": "124",
+    "name": "Mario",
+    "parent": "0",
+  },
+]
+`;
+
+exports[`wp-org-comments › Comments fromPost returns comments from entity.raw 2`] = `Array []`;
+
+exports[`wp-org-comments › Comments fromPost returns comments from entity.raw 3`] = `
+Array [
+  Object {
+    "avatar": "https://secure.gravatar.com/avatar/0e185711dda10636f58cf83e358b2e6e?s=96&d=mm&r=g",
+    "content": "<p>Hi, Mario</p>
+",
+    "date": 1549643313000,
+    "id": "129",
+    "name": "David Arenas",
+    "parent": "124",
+  },
+]
+`;
+
+exports[`wp-org-comments › Comments sort replies by date 1`] = `
+Array [
+  Object {
+    "avatar": "https://secure.gravatar.com/avatar/0e185711dda10636f58cf83e358b2e6e?s=96&d=mm&r=g",
+    "content": "<p>Hi, Mario</p>
+",
+    "date": 1549643313000,
+    "id": "129",
+    "name": "David Arenas",
+    "parent": "124",
+  },
+  Object {
+    "avatar": "https://secure.gravatar.com/avatar/0e185711dda10636f58cf83e358b2e6e?s=96&d=mm&r=g",
+    "content": "<p>Hi, Mario</p>
+",
+    "date": 1549645200000,
+    "id": "131",
+    "name": "Alan",
+    "parent": "124",
+  },
+]
+`;
+
+exports[`wp-org-comments › Comments submit a new comment 1`] = `
+Object {
+  "commentsMap": Object {
+    "60": Object {
+      "124": Object {
+        "avatar": "https://secure.gravatar.com/avatar/a850f5724ad7ea03941081972841a04a?s=96&d=mm&r=g",
+        "content": "<p>Hi, Reyes</p>
+",
+        "date": 1549470939000,
+        "id": "124",
+        "name": "Mario",
+        "parent": "0",
+      },
+      "129": Object {
+        "avatar": "https://secure.gravatar.com/avatar/0e185711dda10636f58cf83e358b2e6e?s=96&d=mm&r=g",
+        "content": "<p>Hi, Mario</p>
+",
+        "date": 1549643313000,
+        "id": "129",
+        "name": "David Arenas",
+        "parent": "124",
+      },
+      "130": Object {
+        "avatar": "https://secure.gravatar.com/avatar/0e185711dda10636f58cf83e358b2e6e?s=96&d=mm&r=g",
+        "content": "<p>Hello</p>
+",
+        "date": 1549643320000,
+        "id": "130",
+        "name": "Mario",
+        "parent": "129",
+      },
+      "131": Object {
+        "avatar": "https://secure.gravatar.com/avatar/0e185711dda10636f58cf83e358b2e6e?s=96&d=mm&r=g",
+        "content": "<p>Hi, Mario</p>
+",
+        "date": 1549645200000,
+        "id": "131",
+        "name": "Alan",
+        "parent": "124",
+      },
+      "5": Object {
+        "avatar": "https://secure.gravatar.com/avatar/485a5c16c5e51ffad6e76c48fd0cb88b?s=96&d=mm&r=g",
+        "content": "<p>Nice post, Alan! Iceland must be amazing. Thanks for sharing 🙂</p>
+",
+        "date": 1484320243000,
+        "id": "5",
+        "name": "Reyes Martinez",
+        "parent": "0",
+      },
+    },
+  },
+}
+`;
+
+exports[`wp-org-comments › Comments update comments 1`] = `
+Object {
+  "commentsMap": Object {
+    "60": Object {
+      "124": Object {
+        "avatar": "https://secure.gravatar.com/avatar/a850f5724ad7ea03941081972841a04a?s=96&d=mm&r=g",
+        "content": "<p>Hi, Reyes</p>
+",
+        "date": 1549470939000,
+        "id": "124",
+        "name": "Mario",
+        "parent": "0",
+      },
+      "129": Object {
+        "avatar": "https://secure.gravatar.com/avatar/0e185711dda10636f58cf83e358b2e6e?s=96&d=mm&r=g",
+        "content": "<p>Hi, Mario</p>
+",
+        "date": 1549643313000,
+        "id": "129",
+        "name": "David Arenas",
+        "parent": "124",
+      },
+      "130": Object {
+        "avatar": "https://secure.gravatar.com/avatar/0e185711dda10636f58cf83e358b2e6e?s=96&d=mm&r=g",
+        "content": "<p>Hello</p>
+",
+        "date": 1549643320000,
+        "id": "130",
+        "name": "Mario",
+        "parent": "129",
+      },
+      "131": Object {
+        "avatar": "https://secure.gravatar.com/avatar/0e185711dda10636f58cf83e358b2e6e?s=96&d=mm&r=g",
+        "content": "<p>Hi, Mario</p>
+",
+        "date": 1549645200000,
+        "id": "131",
+        "name": "Alan",
+        "parent": "124",
+      },
+      "5": Object {
+        "avatar": "https://secure.gravatar.com/avatar/485a5c16c5e51ffad6e76c48fd0cb88b?s=96&d=mm&r=g",
+        "content": "<p>Nice post, Alan! Iceland must be amazing. Thanks for sharing 🙂</p>
+",
+        "date": 1484320243000,
+        "id": "5",
+        "name": "Reyes Martinez",
+        "parent": "0",
+      },
+    },
+  },
+}
+`;
