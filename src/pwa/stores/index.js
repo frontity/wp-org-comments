@@ -6,7 +6,6 @@ const Comment = types
   .model('Comment', {
     id: types.identifier,
     parent: types.string,
-    post: types.string,
     name: types.string,
     content: types.string,
     avatar: types.string,
@@ -17,9 +16,9 @@ const Comment = types
       return getParent(self);
     },
     get replies() {
-      return values(self.commentsMap).filter(
-        ({ parent }) => parent === self.id,
-      );
+      return values(self.commentsMap)
+        .filter(({ parent }) => parent === self.id)
+        .sort((a, b) => a.date - b.date);
     },
   }));
 
@@ -80,6 +79,6 @@ export default types
         .type('form')
         .send(data);
 
-      self.update({ type, id });
+      yield self.update({ type, id });
     }),
   }));
