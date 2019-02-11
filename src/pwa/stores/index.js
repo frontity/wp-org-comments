@@ -1,31 +1,6 @@
 import { types, getRoot, getParent, getEnv, flow } from 'mobx-state-tree';
 import { values, has, get, set } from 'mobx';
-
-const dateGmtRegex = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})$/;
-const normalizeDate = dateGmt => {
-  const [, year, month, day, hours, minutes, seconds] = dateGmt.match(
-    dateGmtRegex,
-  );
-  return new Date(Date.UTC(year, month - 1, day, hours, minutes, seconds));
-};
-
-const normalizeComment = ({
-  id,
-  parent,
-  post,
-  author_name: name,
-  author_avatar_urls: { '96': avatar },
-  date_gmt: dateGmt,
-  content: { rendered: content },
-}) => ({
-  id: `${id}`,
-  parent: `${parent}`,
-  post: `${post}`,
-  name,
-  content,
-  avatar,
-  date: normalizeDate(dateGmt),
-});
+import { normalizeComment } from '../utils';
 
 const Comment = types
   .model('Comment', {
@@ -41,8 +16,11 @@ const Comment = types
     get commentsMap() {
       return getParent(self);
     },
-    replies: () =>
-      values(self.commentsMap).filter(({ parent }) => parent === self.id),
+    get replies() {
+      return values(self.commentsMap).filter(
+        ({ parent }) => parent === self.id,
+      );
+    },
   }));
 
 export default types
@@ -53,42 +31,46 @@ export default types
     get root() {
       return getRoot(self);
     },
-    getFromPost: postId => {
-      const id = `${postId}`;
-      if (!has(self.commentsMap, id)) {
-        self.init(id);
-      }
-      const postComments = get(self.commentsMap, id);
+    fromPost: ({ type, id }) => {
+      self.init({ type, id });
+      const postComments = get(self.commentsMap, String(id));
       return values(postComments)
-        .filter(({ parent }) => parent === 0)
+        .filter(({ parent }) => parent === '0')
         .sort((a, b) => a.date - b.date);
     },
   }))
   .actions(self => ({
-    init: postId => {
-      const id = `${postId}`;
-      // Initialize comments for post with id `id`
-      if (!has(self.commentsMap, id)) set(self.commentsMap, id, {});
+    addComments: (strId, comments) => {
+      const normalized = comments.map(normalizeComment);
+      const postComments = get(self.commentsMap, strId);
+      normalized.forEach(c => set(postComments, c.id, c));
     },
-    update: flow(function* updateComments(postId) {
-      const id = `${postId}`;
+    init: ({ type, id }) => {
+      const strId = String(id);
+      // Return if it was previously initialized
+      if (has(self.commentsMap, strId)) return;
+
+      // Set an empty map for that entity
+      set(self.commentsMap, strId, {});
+
+      // Get the initial comments from `entity.raw`
+      const { _embedded: embedded } = self.root.connection.entity(type, id).raw;
+
+      if (embedded.replies) {
+        const [comments] = embedded.replies;
+        self.addComments(strId, comments);
+        self.update({ type, id });
+      }
+    },
+    update: flow(function* updateComments({ type, id }) {
       // Initialize comments for post with id `id`
-      self.init(id);
+      self.init({ type, id });
 
       // Request comments from REST API
       const { request } = getEnv(self.root);
       const { body: comments } = yield request.get(
         `/?rest_route=/wp/v2/comments&post=${id}&per_page=100`,
       );
-
-      console.log(comments);
-
-      const normalized = comments.map(normalizeComment);
-      console.log(normalized);
-
-      const postComments = get(self.commentsMap, id);
-
-      // Add requested comments
-      normalized.forEach(comment => set(postComments, comment.id, comment));
+      self.addComments(String(id), comments);
     }),
   }));
