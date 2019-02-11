@@ -9,7 +9,7 @@ const Comment = types
     name: types.string,
     content: types.string,
     avatar: types.string,
-    date: types.Date,
+    dateString: types.string,
   })
   .views(self => ({
     get commentsMap() {
@@ -19,6 +19,9 @@ const Comment = types
       return values(self.commentsMap)
         .filter(({ parent }) => parent === self.id)
         .sort((a, b) => a.date - b.date);
+    },
+    get date() {
+      return new Date(self.dateString);
     },
   }));
 

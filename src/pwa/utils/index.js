@@ -1,6 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-const normalizeDate = date => new Date(date);
-
 export const normalizeComment = ({
   id,
   parent,
@@ -16,5 +14,5 @@ export const normalizeComment = ({
   name,
   content,
   avatar,
-  date: normalizeDate(date),
+  dateString: date,
 });
