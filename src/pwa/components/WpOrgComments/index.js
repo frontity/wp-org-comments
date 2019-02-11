@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { inject } from 'mobx-react';
 import styled from 'styled-components';
-import Comment from './Comment';
+import CommentsList from './CommentsList';
 
 class WpOrgComments extends Component {
   constructor(props) {
@@ -32,9 +32,7 @@ class WpOrgComments extends Component {
     const { comment, author, email, url, parentId } = this.state;
     return (
       <Container>
-        {comments.map(props => (
-          <Comment key={props.id} {...props} onReply={this.setParentId} />
-        ))}
+        <CommentsList comments={comments} onReply={this.setParentId} />
         <hr />
         <Form ref={this.formRef} action="/wp-comments-post.php" method="post">
           <FormTitle>
@@ -122,7 +120,7 @@ class WpOrgComments extends Component {
 
 WpOrgComments.propTypes = {
   comments: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  type: PropTypes.string.isRequired,
+  // type: PropTypes.string.isRequired,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
@@ -193,6 +191,6 @@ const Button = styled.input`
   box-shadow: 1px 1px 1px 0 ${({ theme }) => theme.colors.shadow};
 `;
 
-export default inject(({ stores: { comments } }, { id }) => ({
-  comments: comments.getFromPost(id),
+export default inject(({ stores: { comments } }, { type, id }) => ({
+  comments: comments.fromPost({ type, id }),
 }))(WpOrgComments);

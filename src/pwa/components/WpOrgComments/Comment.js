@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import CommentsList from './CommentsList';
 
 const Comment = ({ id, name, avatar, date, content, replies, onReply }) => (
   <Container>
@@ -17,9 +18,7 @@ const Comment = ({ id, name, avatar, date, content, replies, onReply }) => (
     <Content dangerouslySetInnerHTML={{ __html: content }} />
     {replies && replies.length ? (
       <Replies>
-        {replies.map(props => (
-          <Comment key={props.id} {...props} />
-        ))}
+        <CommentsList comments={replies} onReply={onReply} />
       </Replies>
     ) : null}
   </Container>
@@ -70,14 +69,19 @@ const Replies = styled.div`
   padding-left: 8px;
 `;
 
-Comment.propTypes = {
+const commentTypes = {
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   name: PropTypes.string.isRequired,
   avatar: PropTypes.string.isRequired,
   date: PropTypes.instanceOf(Date).isRequired,
   content: PropTypes.string.isRequired,
   onReply: PropTypes.func.isRequired,
-  replies: PropTypes.arrayOf(Comment.propTypes),
+};
+
+commentTypes.replies = PropTypes.arrayOf(PropTypes.shape(commentTypes));
+
+Comment.propTypes = {
+  ...commentTypes,
 };
 
 Comment.defaultProps = {
