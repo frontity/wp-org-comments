@@ -12,6 +12,7 @@ const Comment = ({
   content,
   replies,
   onReply,
+  linkStyles,
   lang,
 }) => (
   <Container>
@@ -25,7 +26,10 @@ const Comment = ({
       </Text>
       <ReplyButton onClick={() => onReply(id)}>{lang.reply}</ReplyButton>
     </Header>
-    <Content dangerouslySetInnerHTML={{ __html: content }} />
+    <Content
+      linkStyles={linkStyles}
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
     {replies && replies.length ? (
       <Replies>
         <CommentsList comments={replies} onReply={onReply} />
@@ -41,6 +45,11 @@ const commentTypes = {
   date: PropTypes.instanceOf(Date).isRequired,
   content: PropTypes.string.isRequired,
   onReply: PropTypes.func.isRequired,
+  linkStyles: PropTypes.shape({
+    color: PropTypes.string,
+    bold: PropTypes.bool,
+    underline: PropTypes.string,
+  }).isRequired,
   lang: PropTypes.shape({
     reply: PropTypes.string.isRequired,
   }).isRequired,
@@ -56,7 +65,8 @@ Comment.defaultProps = {
   replies: [],
 };
 
-export default inject(({ stores: { comments } }) => ({
+export default inject(({ stores: { comments, settings } }) => ({
+  linkStyles: settings.theme.linkStyles,
   lang: {
     reply: comments.lang.get('reply'),
   },
@@ -87,7 +97,16 @@ const Name = styled.div`
   font-weight: bold;
 `;
 const Fecha = styled.div``;
-const Content = styled.div``;
+const Content = styled.div`
+  a {
+    color: ${({ theme, linkStyles }) => linkStyles.color || theme.colors.link};
+    font-weight: ${({ linkStyles }) => (linkStyles.bold ? 'bold' : 'normal')};
+    text-decoration: ${({ linkStyles }) => {
+      if (typeof linkStyles.underline === 'undefined') return 'underline';
+      return linkStyles.underline ? 'underline' : 'none';
+    }};
+  }
+`;
 
 const ReplyButton = styled.button`
   color: ${({ theme }) => theme.colors.text};
