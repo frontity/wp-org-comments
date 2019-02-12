@@ -20,7 +20,15 @@ class WpOrgComments extends Component {
     this.formRef = createRef();
   }
 
-  setParentId = parentId => this.setState({ parentId });
+  setParentId = parentId => {
+    this.setState({ parentId });
+    if (parentId) {
+      this.formRef.current.scrollIntoView({
+        block: 'start',
+        behavior: 'smooth',
+      });
+    }
+  };
 
   onChange = ({ target }) => {
     const { name, value } = target;
