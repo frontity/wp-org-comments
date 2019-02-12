@@ -1,9 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { inject } from 'mobx-react';
 import CommentsList from './CommentsList';
 
-const Comment = ({ id, name, avatar, date, content, replies, onReply }) => (
+const Comment = ({
+  id,
+  name,
+  avatar,
+  date,
+  content,
+  replies,
+  onReply,
+  lang,
+}) => (
   <Container>
     <Header>
       <Avatar>
@@ -13,7 +23,7 @@ const Comment = ({ id, name, avatar, date, content, replies, onReply }) => (
         <Name>{name}</Name>
         <Fecha>{date.toLocaleString()}</Fecha>
       </Text>
-      <ReplyButton onClick={() => onReply(id)}>Reply</ReplyButton>
+      <ReplyButton onClick={() => onReply(id)}>{lang.reply}</ReplyButton>
     </Header>
     <Content dangerouslySetInnerHTML={{ __html: content }} />
     {replies && replies.length ? (
@@ -23,6 +33,34 @@ const Comment = ({ id, name, avatar, date, content, replies, onReply }) => (
     ) : null}
   </Container>
 );
+
+const commentTypes = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  name: PropTypes.string.isRequired,
+  avatar: PropTypes.string.isRequired,
+  date: PropTypes.instanceOf(Date).isRequired,
+  content: PropTypes.string.isRequired,
+  onReply: PropTypes.func.isRequired,
+  lang: PropTypes.shape({
+    reply: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
+commentTypes.replies = PropTypes.arrayOf(PropTypes.shape(commentTypes));
+
+Comment.propTypes = {
+  ...commentTypes,
+};
+
+Comment.defaultProps = {
+  replies: [],
+};
+
+export default inject(({ stores: { comments } }) => ({
+  lang: {
+    reply: comments.lang.get('reply'),
+  },
+}))(Comment);
 
 const Container = styled.div`
   margin-bottom: 32px;
@@ -68,24 +106,3 @@ const Replies = styled.div`
   border-left: 2px solid ${({ theme }) => theme.colors.link};
   padding-left: 8px;
 `;
-
-const commentTypes = {
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  name: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
-  date: PropTypes.instanceOf(Date).isRequired,
-  content: PropTypes.string.isRequired,
-  onReply: PropTypes.func.isRequired,
-};
-
-commentTypes.replies = PropTypes.arrayOf(PropTypes.shape(commentTypes));
-
-Comment.propTypes = {
-  ...commentTypes,
-};
-
-Comment.defaultProps = {
-  replies: [],
-};
-
-export default Comment;

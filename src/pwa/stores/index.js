@@ -1,5 +1,6 @@
 import { types, getRoot, getParent, getEnv, flow } from 'mobx-state-tree';
 import { values, has, get, set } from 'mobx';
+import Lang from './lang';
 import { normalizeComment } from '../utils';
 
 const Comment = types
@@ -28,6 +29,7 @@ const Comment = types
 export default types
   .model('WpOrgComments', {
     commentsMap: types.map(types.map(Comment)),
+    lang: types.optional(Lang, {}),
   })
   .views(self => ({
     get root() {

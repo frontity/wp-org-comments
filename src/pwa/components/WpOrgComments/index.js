@@ -42,7 +42,7 @@ class WpOrgComments extends Component {
   };
 
   render() {
-    const { comments, id } = this.props;
+    const { comments, id, lang } = this.props;
     const { comment, author, email, url, parentId } = this.state;
     return (
       <Container>
@@ -50,15 +50,15 @@ class WpOrgComments extends Component {
         <hr />
         <Form ref={this.formRef} onSubmit={this.onSubmit}>
           <FormTitle>
-            <h3>Leave a reply </h3>
+            <h3>{lang.leaveReply} </h3>
             {parentId ? (
               <CancelReply onClick={() => this.setParentId(0)}>
-                Cancel reply
+                {lang.cancelReply}
               </CancelReply>
             ) : null}
           </FormTitle>
           <Label htmlFor="comment">
-            <span>Comment</span>
+            <span>{lang.comment} *</span>
             <TextArea
               id="comment"
               name="comment"
@@ -71,7 +71,7 @@ class WpOrgComments extends Component {
             />
           </Label>
           <Label htmlFor="author">
-            <span>Name</span>
+            <span>{lang.name} *</span>
             <Input
               id="author"
               name="author"
@@ -84,7 +84,7 @@ class WpOrgComments extends Component {
             />
           </Label>
           <Label htmlFor="email">
-            <span>Email</span>
+            <span>{lang.email} *</span>
             <Input
               id="email"
               name="email"
@@ -98,7 +98,7 @@ class WpOrgComments extends Component {
             />
           </Label>
           <Label htmlFor="url">
-            <span>Webstite</span>
+            <span>{lang.website}</span>
             <Input
               id="url"
               name="url"
@@ -121,7 +121,7 @@ class WpOrgComments extends Component {
             id="comment_parent"
             value={parentId}
           />
-          <Button type="submit" value="Post Comment" />
+          <Button type="submit" value={lang.postComment} />
         </Form>
       </Container>
     );
@@ -133,11 +133,29 @@ WpOrgComments.propTypes = {
   type: PropTypes.string.isRequired,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   submit: PropTypes.func.isRequired,
+  lang: PropTypes.shape({
+    leaveReply: PropTypes.string.isRequired,
+    cancelReply: PropTypes.string.isRequired,
+    comment: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    website: PropTypes.string.isRequired,
+    postComment: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default inject(({ stores: { comments } }, { type, id }) => ({
   comments: comments.fromPost({ type, id }),
   submit: comments.submit,
+  lang: {
+    leaveReply: comments.lang.get('leaveReply'),
+    cancelReply: comments.lang.get('cancelReply'),
+    comment: comments.lang.get('comment'),
+    name: comments.lang.get('name'),
+    email: comments.lang.get('email'),
+    website: comments.lang.get('website'),
+    postComment: comments.lang.get('postComment'),
+  },
 }))(WpOrgComments);
 
 const Container = styled.div`

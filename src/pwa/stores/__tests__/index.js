@@ -40,7 +40,7 @@ describe('wp-org-comments › Comments', () => {
   });
   test('update comments', async () => {
     await stores.comments.update({ type: 'post', id: 60 });
-    expect(stores.comments).toMatchSnapshot();
+    expect(stores.comments.commentsMap).toMatchSnapshot();
   });
   test('submit a new comment', async () => {
     const data = {
@@ -52,7 +52,7 @@ describe('wp-org-comments › Comments', () => {
       comment_parent: 129,
     };
     await stores.comments.submit({ type: 'post', id: 60, data });
-    expect(stores.comments).toMatchSnapshot();
+    expect(stores.comments.commentsMap).toMatchSnapshot();
     expect(request.post).toHaveBeenCalledWith('/wp-comments-post.php');
     expect(request.type).toHaveBeenCalledWith('form');
     expect(request.send).toHaveBeenCalledWith(data);
