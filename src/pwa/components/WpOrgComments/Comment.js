@@ -38,27 +38,22 @@ const Comment = ({
   </Container>
 );
 
-const commentTypes = {
+Comment.propTypes = {
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   name: PropTypes.string.isRequired,
   avatar: PropTypes.string.isRequired,
   date: PropTypes.instanceOf(Date).isRequired,
   content: PropTypes.string.isRequired,
+  replies: PropTypes.arrayOf(PropTypes.shape({})),
   onReply: PropTypes.func.isRequired,
   linkStyles: PropTypes.shape({
     color: PropTypes.string,
     bold: PropTypes.bool,
-    underline: PropTypes.string,
+    underline: PropTypes.bool,
   }).isRequired,
   lang: PropTypes.shape({
     reply: PropTypes.string.isRequired,
   }).isRequired,
-};
-
-commentTypes.replies = PropTypes.arrayOf(PropTypes.shape(commentTypes));
-
-Comment.propTypes = {
-  ...commentTypes,
 };
 
 Comment.defaultProps = {
